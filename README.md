@@ -1,5 +1,7 @@
 # shift-hello-api
 
+[![Build Status](https://travis-ci.org/kpollich/shift-hello-api.svg?branch=master)](https://travis-ci.org/kpollich/shift-hello-api)
+
 An API for automating Slack messages and more
 
 ## Installation
