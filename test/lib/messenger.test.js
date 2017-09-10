@@ -1,55 +1,88 @@
-require('dotenv').config({ silent: true })
+require('dotenv').config()
 
 const axios = require('axios')
 const Messenger = require('../../lib/messenger')
 const sinon = require('sinon')
 
+let getRandomMessage
 let post
-
-beforeAll(() => {
-  post = sinon.stub(axios, 'post')
-  post
-    .withArgs(process.env.SLACK_ENDPOINT, {
-      text: undefined,
-      channel: 'test'
-    })
-    .returns(Promise.reject('Boo'))
-
-  post
-    .withArgs(process.env.SLACK_ENDPOINT, {
-      text: 'test',
-      channel: undefined
-    })
-    .returns(Promise.reject('Ahh'))
-
-  post
-    .withArgs(process.env.SLACK_ENDPOINT, {
-      text: 'test',
-      channel: 'test'
-    })
-    .returns(Promise.resolve('Hooray'))
-})
-
-afterAll(() => {
-  post.restore()
-})
 
 describe('Messenger', () => {
   describe('#sendMessage', () => {
-    test('rejects when text is not defined', () => {
-      return expect(Messenger.sendMessage({ channel: 'test' })).rejects.toBe(
-        'Boo'
-      )
+    beforeEach(() => {
+      getRandomMessage = sinon
+        .stub(Messenger, '_getRandomMessage')
+        .returns('test')
+      post = sinon.stub(axios, 'post')
     })
 
-    test('rejects when channel is not defined', () => {
-      return expect(Messenger.sendMessage({ text: 'test' })).rejects.toBe('Ahh')
+    afterEach(() => {
+      getRandomMessage.restore()
+      post.restore()
     })
 
-    test('resolves with valid arguments', () => {
-      return expect(
-        Messenger.sendMessage({ text: 'test', channel: 'test' })
-      ).resolves.toBe('Hooray')
+    describe('sign on', () => {
+      test('successful request', () => {
+        post.resolves('Success')
+        return Messenger.sendMessage({
+          isSignOn: true,
+          channel: 'test',
+          name: 'Kyle'
+        }).then(response => {
+          expect(response).toBe('Success')
+          expect(getRandomMessage.callCount).toBe(1)
+          expect(getRandomMessage.firstCall.args).toEqual([
+            { isSignOn: true, name: 'Kyle' }
+          ])
+        })
+      })
+
+      test('error in response', () => {
+        post.returns(Promise.reject('Error'))
+        return Messenger.sendMessage({
+          isSignOn: true,
+          channel: 'test',
+          name: 'Kyle'
+        }).catch(error => {
+          expect(error).toBe('Error')
+          expect(getRandomMessage.callCount).toBe(1)
+          expect(getRandomMessage.firstCall.args).toEqual([
+            { isSignOn: true, name: 'Kyle' }
+          ])
+        })
+      })
+    })
+
+    describe('sign off', () => {
+      test('successful request', () => {
+        post.resolves('Success')
+        return Messenger.sendMessage({
+          isSignOn: false,
+          channel: 'test',
+          name: 'Kyle'
+        }).then(response => {
+          expect(response).toBe('Success')
+          expect(getRandomMessage.callCount).toBe(1)
+          expect(getRandomMessage.firstCall.args).toEqual([
+            { isSignOn: false, name: 'Kyle' }
+          ])
+        })
+      })
+
+      test('error in response', () => {
+        post.returns(Promise.reject('Error'))
+        return Messenger.sendMessage({
+          isSignOn: false,
+          channel: 'test',
+          name: 'Kyle'
+        }).catch(error => {
+          expect(error).toBe('Error')
+          expect(getRandomMessage.callCount).toBe(1)
+          expect(getRandomMessage.firstCall.args).toEqual([
+            { isSignOn: false, name: 'Kyle' }
+          ])
+        })
+      })
     })
   })
 })
