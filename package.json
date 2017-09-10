@@ -6,20 +6,18 @@
   "author": "Kyle Pollich <kpollich1@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "start": "node index.js",
-    "start-dev": "nodemon index.js",
-    "test": "jest"
+    "start": "NODE_ENV=production node index.js",
+    "start-dev": "NODE_ENV=development nodemon index.js",
+    "test": "NODE_ENV=test jest"
   },
   "lint-staged": {
-    "*.js": [
-      "prettier --write --no-semi --single-quote",
-      "git add"
-    ]
+    "*.js": ["prettier --write --no-semi --single-quote", "git add"]
   },
   "dependencies": {
     "axios": "^0.16.2",
     "body-parser": "^1.17.2",
-    "express": "^4.15.4"
+    "express": "^4.15.4",
+    "morgan": "^1.8.2"
   },
   "devDependencies": {
     "dotenv": "^4.0.0",
