@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/kpollich/shift-hello-api.svg?branch=master)](https://travis-ci.org/kpollich/shift-hello-api)
 
-An API for automating Slack messages and more
+An API for sending sign-on/sign-off messages to Slack.
 
 ## Installation
 
@@ -31,6 +31,34 @@ $ yarn test
 
 # Run tests in `watch` mode - tests will re-run on file change
 $ yarn test --watch
+```
+
+## API
+
+There are only two routes exposed by this API, both unauthenticated (for now!): `/sign-in` and `/sign-out`.
+
+### Sign In
+
+Send a random Slack sign-on message on behalf of the provided `name`. Responds with an empty bodied `200` on success, or an `error` object on failure.
+
+`POST /sign-in`
+
+```json
+{ 
+  "name": "John Doe"
+}
+```
+
+### Sign Out
+
+Send a random Slack sign-off message on behalf of the provided `name`. Responds with an empty bodied `200` on success, or an `error` object on failure.
+
+`POST /sign-out`
+
+```json
+{
+  "name": "John Doe"
+}
 ```
 
 ## Tech Rundown
