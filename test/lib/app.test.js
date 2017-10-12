@@ -20,6 +20,9 @@ describe('server', () => {
         .get('/')
         .then(response => {
           expect(response.statusCode).toBe(404)
+          expect(response.body).toEqual({
+            error: { status: 404, message: 'Not Found' }
+          })
         })
     })
   })
