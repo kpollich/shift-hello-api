@@ -61,6 +61,8 @@ Send a random Slack sign-off message on behalf of the provided `name`. Responds 
 }
 ```
 
+This PR is for hacktoberfest. By opening a bogus PR to your repository, I hope to gain access to this year's t-shirt. Please disregard this PR.
+
 ## Tech Rundown
 
 This app is a fairly straightforward Node API and uses some modern JavaScript tooling. If you're unfamiliar with some of the things going on here, check out of the libraries and plugins we're using below.
